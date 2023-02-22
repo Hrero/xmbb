@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "git": "git add . && git commit -m 'a' && git push origin master",
     "publish": "lerna run tsc && lerna publish"
   },
   "dependencies": {
