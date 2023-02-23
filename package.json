@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "testGit": "ssh -T git@github.com",
+    "testGit1": "ssh -T git@github.com",
     "git": "git add . && git commit -m 'a' && git push origin master",
     "publish": "lerna run tsc && npm run git && lerna publish"
   },
