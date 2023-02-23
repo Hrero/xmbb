@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "git": "git add . && git commit -m 'a' && git push origin master",
-    "publish": "lerna run tsc && lerna publish"
+    "publish": "lerna run tsc && npm run git && lerna publish"
   },
   "dependencies": {
     "lodash": "^4.17.21"
