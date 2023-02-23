@@ -26,5 +26,6 @@
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "typescript": "^4.9.5"
-  }
+  },
+  "gitHead": "5951f633beee9ae5e3d09cc430b8d767f534664a"
 }
