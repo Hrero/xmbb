@@ -1,5 +1,5 @@
 {
-  "name": "utils",
+  "name": "@xmbb/utils",
   "version": "0.0.4",
   "description": "> TODO: description",
   "author": "haozengrun <haozengrun_v@didiglobal.com>",
@@ -27,5 +27,5 @@
     "@types/jest": "^29.4.0",
     "typescript": "^4.9.5"
   },
-  "gitHead": "5f8b06b488afbb9797da2d86fa11bd047667bdab"
+  "gitHead": "865932dbbda1b697d787b2fe161a196cf2faf54a"
 }
