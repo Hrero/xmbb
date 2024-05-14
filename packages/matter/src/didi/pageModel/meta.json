@@ -1,0 +1,6 @@
+{
+    "server": "serverless-puhui",
+    "handleType": "dynamicHtml",
+    "template": "../../template/starui2.html",
+    "middleware": "../../middleware/config.js,../../middleware/dubbo.js,../../middleware/didisys-auth.js"
+}

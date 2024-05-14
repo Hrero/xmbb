@@ -1,0 +1,44 @@
+<sls-template slot="header">
+    <title>ETL任务管理</title>
+</sls-template>
+<div id='app'></div>
+<sls-template slot="userInfo">
+    <script>
+        var data = <%= JSON.stringify(data.pageData)%>;
+        data.authority = getAuthority(data.authority, 'labelTypeConfig');
+        window.THISPAGEDATA = data || {};
+            /* 城市去重，参数所有城市 */
+        function getAuthCity(val) {
+            var city = [];
+            var obj = {};
+            if (val && val.length) {
+                for(var i = 0; i < val.length; i++){
+                    if (!obj[val[i].name]) {
+                        val[i].cityId = Number(val[i].taxi_id);
+                        obj[val[i].name] = true;
+                        if(!val[i].cityId){
+                            city.unshift(val[i]);
+                        }else{
+                            city.push(val[i]);
+                        }
+                    }
+                }
+            }
+            return city;
+        };
+        /* 权限过滤,参数1、所有权限 2、页面名称（根据页面名称返回页面相关权限点） */
+        function getAuthority(val, tar) {
+            var auth = [];
+            if (val && val.length) {
+                for(var i = 0; i < val.length; i++){
+                    if(val[i].indexOf(tar) > -1){
+                        auth.push(val[i])
+                    }
+                }
+            }
+            return auth;
+        };
+          </script>
+</sls-template>
+
+
