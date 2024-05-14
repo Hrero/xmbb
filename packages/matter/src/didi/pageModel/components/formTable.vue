@@ -6,9 +6,15 @@
                 <template v-for="(desc, descIndex) in formDescList">
                     <el-form-item v-if="desc.type === 'select'" :key="descIndex + desc.name" :label="desc.name"
                         :prop="desc.field" :rules="desc.rules">
-                        <div v-if="false">{{ desc.field }}</div>
                         <el-select clearable @change="getRelyOnList(desc)" @clear="getRelyOnList(desc)"
                             v-model="formInline[desc.field]" placeholder="请选择">
+                            <el-option v-for="item in desc.postList" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="desc.type === 'multiple'" :key="descIndex + desc.name" :label="desc.name"
+                        :prop="desc.field" :rules="desc.rules" >
+                        <el-select clearable @change="getRelyOnList(desc)" @clear="getRelyOnList(desc)"
+                            v-model="formInline[desc.field]" placeholder="请选择" multiple>
                             <el-option v-for="item in desc.postList" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -21,6 +27,12 @@
                         :prop="desc.field" :rules="desc.rules">
                         <el-date-picker :style="{ width: '230px' }" @change="getDaterangeForm(desc)"
                             @clear="getDaterangeForm(desc)" v-model="formInline[desc.field]" type="daterange" clearable
+                            range-separator="～" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item v-if="desc.type === 'datetimerange'" :key="descIndex + desc.name" :label="desc.name"
+                        :prop="desc.field" :rules="desc.rules">
+                        <el-date-picker :style="{ width: '380px' }" @change="getDaterangeForm(desc)"
+                            @clear="getDaterangeForm(desc)" v-model="formInline[desc.field]" type="datetimerange" clearable
                             range-separator="～" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                     </el-form-item>
                     <el-form-item v-if="desc.type === 'month' && desc.pickShow" :key="descIndex + desc.name"
@@ -37,6 +49,15 @@
                             type="year" value-format="yyyy" placeholder="请选择">
                         </el-date-picker>
                     </el-form-item>
+                    <el-form-item v-if="desc.type === 'datetime' && desc.pickShow" :key="descIndex + desc.name"
+                        :label="desc.name" :prop="desc.field" :rules="desc.rules">
+                        <!-- <el-date-picker :style="{ width: '230px' }" :disabled="!formInline[desc.disabled]"
+                            @change="getYearForm(desc)" v-model="formInline[desc.field]" @clear="getYearForm(desc)"
+                            type="year" value-format="yyyy" placeholder="请选择">
+                        </el-date-picker> -->
+                        <el-date-picker :style="{ width: '230px' }" :disabled="!formInline[desc.disabled]" v-model="formInline[desc.field]" type="datetime" placeholder="" />
+                    </el-form-item>
+
                     <el-form-item v-if="desc.type === 'upload'" label="上传文件" prop="url" :label-width="labelWidth"
                         :prop="desc.field" :rules="desc.rules">
                         <el-upload ref="uploadFile" class="upload" :multiple="desc.multiple" drag accept=".xlsx, .xls"
@@ -99,20 +120,47 @@
                     </div>
                 </div>
                 <el-table :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
+                    <el-table-column type="index" width="80"  label="序号" align="center">
+                        <template scope="scope">
+                            <span>{{scope.$index + 1 + (page - 1) * pageSize}}</span>
+                        </template>
+                    </el-table-column>
                     <template v-for="(desc, descIndex) in tableDescList">
-                        <el-table-column v-if="!desc.selection" :width="desc.width" :type="getTypeSelection(desc.selection)"
-                            :prop="desc.field" :label="desc.tableColOtherName ? desc.tableColOtherName : desc.name">
+                        <el-table-column v-if="!desc.selection && desc.operation && desc.operation.length > 0" :width="desc.width" :type="getTypeSelection(desc.selection)"
+                            :prop="desc.field" :label="desc.tableColOtherName ? desc.tableColOtherName : desc.name" fixed="right">
                             <template slot-scope="scope">
-                                <div v-if="desc.operation && desc.operation.length > 0">
+                                <div class="bigff">
                                     <div v-if="desc.showFn && desc.showFn(scope.row)">
-                                        <template v-for="btn in desc.operation">
-                                            <span class="lineBtn btnSpan" v-if="btnShowfn(scope.row, btn)"
-                                                @click.stop="tableBtnList(scope.row, btn)">{{ btn.name }}</span>
-                                        </template>
+                                        <el-dropdown>
+                                            <span class="el-dropdown-link cus">
+                                                操作<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </span>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="btn in desc.operation" v-if="btnShowfn(scope.row, btn)">
+                                                <span style="display: block; width: 100%;" @click.stop="tableBtnList(scope.row, btn)">{{ btn.name }}</span>
+                                                </el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                        <!-- <div class="faterss bbq" @click="godds(scope.row)">操作<i
+                                                class="el-icon-arrow-down el-icon--right bbq"></i>
+                                            <div class="dada223"></div>
+                                            <div :class="[scope.row.showBtss ? 'showBtss' : '', 'chaids']">
+                                                <div :class="['dada22']" v-for="btn in desc.operation">
+                                                    <div class="divdda"></div>
+                                                    <span v-if="btnShowfn(scope.row, btn)"
+                                                        @click.stop="tableBtnList(scope.row, btn)">{{ btn.name }}</span>
+                                                </div>
+                                            </div>
+                                        </div> -->
                                     </div>
                                     <div v-else>-</div>
                                 </div>
-                                <div v-else>
+                            </template>
+                        </el-table-column>
+                        <el-table-column v-else :width="desc.width" :type="getTypeSelection(desc.selection)"
+                            :prop="desc.field" :label="desc.tableColOtherName ? desc.tableColOtherName : desc.name">
+                            <template slot-scope="scope">
+                                <div>
                                     <el-tag v-if="desc.tableTag" :type="findTableTag(desc, scope.row)">{{
                                         tableFormat(desc, scope.row)
                                     }}</el-tag>
@@ -138,7 +186,7 @@
 <script>
 import ExportTesk from '@/components/ExportTesk.vue';
 import FormatTime from '@/assets/js/timeUtil';
-import { pickBy, isEmpty, get, isArray } from 'lodash';
+import { pickBy, isEmpty, get, isArray, cloneDeep } from 'lodash';
 import { send } from 'process';
 export default {
     name: 'formTable',
@@ -167,7 +215,6 @@ export default {
             labelPositon: '',
             formStyleLine: false,
             pageAbleInner: false,
-            defaultFormLine: {},
             screenLoading: false,
             dataUploadFileList: [],
             filesList: [],
@@ -187,10 +234,12 @@ export default {
             tableTopBtn: [],
             formInline: {},
             timeFieldList: [],
-            dialogUploadUrl: ''
+            dialogUploadUrl: '',
+            authority: ''
         }
     },
     async mounted() {
+        this.authority = window.THISPAGEDATA.authority.join(',')
         await this.init()
         if (!this.formActions.lock && this.formType == 'formTable') {
             await this.searchList()
@@ -205,6 +254,15 @@ export default {
         };
         console.log(bizEnv, urlMap[bizEnv], 'urlMap[bizEnv]');
         this.dialogUploadUrl = urlMap[bizEnv];
+        document.addEventListener('click', (e) => {
+            if (e.target.innerText !== '创建生产执行计划' && e.target.className.indexOf('bbq') < 0) {
+                for (let index = 0; index < this.tableData.length; index++) {
+                    const element = this.tableData[index];
+                    element.showBtss = false
+                }
+                this.tableData = cloneDeep(this.tableData)
+            }
+        })
     },
     methods: {
         async init() {
@@ -220,7 +278,6 @@ export default {
             this.operatorId = window.THISPAGEDATA.operatorId
             this.paramsArray = this.formActions.paramsArray
             this.pageAbleInner = this.formActions.pageAbleInner
-            this.defaultFormLine = this.formActions.defaultFormLine
             this.initFormInline()
             this.tableDescList = this.formActions.tableCfs.filter(item => item.tableColShow !== false).sort((a, b) => a.tableIndex - b.tableIndex)
             this.tableTopBtn = this.formActions.tableTopBtn ? this.formActions.tableTopBtn : []
@@ -246,10 +303,6 @@ export default {
                 }
                 this.$set(this.formInline, element.field, initValue)
             });
-            Object.keys(this.defaultFormLine).forEach(key => {
-                const value = this.defaultFormLine[key]
-                this.$set(this.formInline, key, value)
-            })
         },
         clearFiles() {
             this.filesList = []
@@ -462,6 +515,7 @@ export default {
             if (!sendP) {
                 return
             }
+            sendP.orderTypeListJsonArray = [10, 11, 12]
             if (this.formActions.postTableType === 'dubbo') {
                 this.getData(
                     this.formActions.postTableUrl,
@@ -491,8 +545,14 @@ export default {
                         this.$message.error(res.msg);
                     }
                 } else {
-                    // sendP
-                    const res = await this.$kop.send(this.formActions.postTableUrl, pickBy(sendP))
+                    console.log(window.THISPAGEDATA, 'bizOrigin');
+                    let bizOrigin = 1;
+                    if (window.THISPAGEDATA.userUrlType == 'phwork') {
+                        bizOrigin = 2
+                    }
+                    const res = await this.$kop.send(this.formActions.postTableUrl, pickBy({...sendP, authority: this.authority, 
+                        orderByGmtCreateTimeDesc: true,
+                        hasOfcInfo: true, bizOrigin}))
                     if (res.data.code === 200) {
                         this.resTable(res.data)
                     } else {
@@ -503,11 +563,13 @@ export default {
         },
         resTable(res) {
             const data = res.data && Array.isArray(res.data[this.formActions.postTableWrapField]) ? res.data[this.formActions.postTableWrapField] : res.data
-            if (this.formActions.postTableField && Object.keys(data).length > 0) {
+            console.log(data, 'data===data');
+            if (this.formActions.postTableField) {
                 this.tableData = data.map(item => item[this.formActions.postTableField]);
             } else {
                 this.tableData = Object.keys(data).length > 0 ? data: [];
             }
+            console.log(this.tableData, 'this.tableData');
             // 报了一层分页
             if (res.data && res.data.list && Array.isArray(res.data.list)) {
                 this.total = res.data.total;
@@ -544,8 +606,8 @@ export default {
                 const fieldSection = item.field.split('-')
                 if (sendP[item.field]) {
                     if (item.result === 'timestamp') {
-                        sendP[fieldSection[0]] = new Date(sendP[item.field][0]).getTime()
-                        sendP[fieldSection[1]] = new Date(sendP[item.field][1]).getTime()
+                        sendP[fieldSection[0]] = new Date().getTime(sendP[item.field][0])
+                        sendP[fieldSection[1]] = new Date().getTime(sendP[item.field][1])
                     } else {
                         sendP[fieldSection[0]] = this.formatTime(sendP[item.field][0])
                         sendP[fieldSection[1]] = this.formatTime(sendP[item.field][1])
@@ -569,8 +631,7 @@ export default {
                 }
             }
             return {
-                ...sendP,
-                ...this.formActions.defaultParams
+                ...sendP
             }
         },
         submitForm(btn) {
@@ -706,6 +767,15 @@ export default {
                 }
             }
         },
+        godds(data) {
+            console.log(data);
+            for (let index = 0; index < this.tableData.length; index++) {
+                const element = this.tableData[index];
+                element.showBtss = false
+            }
+            data.showBtss = true
+            this.tableData = cloneDeep(this.tableData)
+        },
         downloadFileMixin(originUrl) {
             if (!originUrl) {
                 return this.$message.error('文件地址获取失败');
@@ -786,6 +856,24 @@ export default {
     .el-form-item {
         vertical-align: middle !important;
     }
+    .el-input__suffix .el-input__suffix-inner .el-input__icon {
+        line-height: 26px;
+    }
+
+    .el-form-item {
+        vertical-align: middle !important;
+    }
+
+    .el-table .cell {
+        box-sizing: border-box;
+        overflow: visible !important;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-all;
+        line-height: 23px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 }
 </style>
 <style lang="scss" scoped>
@@ -856,6 +944,9 @@ export default {
     cursor: pointer;
     margin: 0 5px;
 }
+.cus{
+    cursor: pointer;
+}
 .btnSpaCu {
     cursor: pointer;
     color: #1db5ad;
@@ -906,5 +997,51 @@ export default {
         }
     }
 }
+
+.faterss {
+    position: relative;
+    cursor: pointer;
+}
+.dada223 {
+    height: 5px;
+    width: 10px;
+}
+.dada22{
+    line-height: 35px;
+}
+.dada22:hover{
+  background: #f3f6f9;
+}
+.showBtss {
+    display: block !important;
+}
+.chaids {
+    display: none;
+    position: absolute;
+    left: -10px;
+    width: 140px;
+    padding: 8px 6px;
+    z-index: 998;
+    cursor: pointer;
+    // margin: 5px 0;
+    background-color: #FFFFFF;
+    border: 1px solid #EBEEF5;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.divdda {
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg) translate(-5px);
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    background: #ffffff;
+}
 </style>
+
 

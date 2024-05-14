@@ -9,6 +9,19 @@ module.exports = function main(event, context, callback) {
   const params = req.body || req.query;
   // let { sendData = "{}" } = params;
   // sendData = JSON.parse(sendData);
+  var authCity = pageData.citys || [];
+  var city = [];
+  if (authCity.length) {
+    for (var i = 0; i < authCity.length; i++) {
+      if (authCity[i].taxi_id == "0") {
+        city = [0];
+        break;
+      }
+      city.push(Number(authCity[i].taxi_id));
+    }
+  }
+  city = JSON.stringify(city);
+
   if (params.actype) {
     const cfg = {
       path: "",
@@ -18,6 +31,7 @@ module.exports = function main(event, context, callback) {
       attchmentArgs: {
         userId: pageData.userId,
         userNameCN: pageData.userNameCN,
+        cityIds: pageData.citys.map((v) => v.id),
       },
     };
 

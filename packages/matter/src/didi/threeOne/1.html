@@ -1,0 +1,43 @@
+<div id="app" :style="startStyle" :class="[{'weixin':isWeixin}]" v-cloak v-loading.fullscreen.lock="loading" element-loading-text="提交中...">
+    <!--生产工具（新）代码开始 -->
+    <div v-if="currentPage == 'bindPageNew'">
+        <el-form ref="bikeBindInfo" :model="bikeBindInfoNew" label-width="150px" :rules="rules" class="bindStyle">
+                <el-form-item>
+                 <el-button-group style="width:100%;">
+                     <el-button type="primary">当前厂区：{{productLineFormNew.odmProductName}}</el-button>
+                     <el-button type="primary" icon="edit" @click="changeProductLineNew">当前产线：{{productLineFormNew.odmProductLine}}</el-button>
+                     <el-button type="primary" icon="edit" @click="changeBikeNew">当前车型：{{currentBikeInfoNew.modelName}}</el-button>
+                     <el-button type="primary">当前锁型：{{currentLockInfoNew.modelName}}</el-button>
+                     <el-button type="primary" @click="chooseMaterialShow = true" icon="setting">{{materialInfo.materialName ? '当前裸车物料号：'+materialInfo.materialName : '请选择物料号'}}</el-button>
+                 </el-button-group>
+                </el-form-item>
+                <el-form-item>
+                     <el-button size="large" @click="scanQRCodeNew" type="primary" v-if="isWeixin" class="scan-btn">扫码</el-button>
+                     <input v-if="!isWeixin" id="inputFocusNew" type="text" placeholder="请扫码" class="common-input" @keyup.enter="bikeInfoInputEnterNew" v-model="bikeBindInfoNew.codeInput" autofocus="autofocus">
+                 </el-form-item>
+                <div class="bindForm">
+                <el-form-item :label="item.codeName" v-for="item in bikeBindInfoNew.parkOptions" v-if="bikeBindInfoNew.parkOptions.length" :class="item.value ? 'upload-info-success' : ''" class="bindItem">
+                  <el-input v-model="item.value" :disabled="true"></el-input>
+                </el-form-item>
+                </div>
+                <el-form-item v-if="bikeBindInfoNew.parkOptions.length==0">
+                    当前车锁关系未配置
+                </el-form-item>
+                <el-form-item style="text-align: center;" class="bindBtn" >
+                <el-button type="primary" size="large" @click="handleBindNew(true)" v-if="bikeBindInfoNew.parkOptions.length">绑定</el-button>
+                </el-form-item>
+            </el-form>
+        <img class="resetQr" src="//pt-starimg.didistatic.com/static/starimg/img/1516788542337MXkjLEmnhnvnYaeyllU.png" alt="" >
+    </div>
+</div>
+    <!--选择物料号开始-->
+    <div class="choose-material-type" :style="startStyle" v-if="chooseMaterialShow" @click.self="chooseMaterialShow = false">
+      <!--选车型-->
+      <div class="main-con">
+        <div class="item" @click="chooseMaterial(item)" v-for="item in materialList">
+          <p class="img-con">{{item.materialName}}</p>
+          <p>{{item.materialNo}}</p>
+        </div>
+      </div>
+   </div>
+  <!--选择物料号结束-->

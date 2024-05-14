@@ -1,23 +1,26 @@
 <template>
   <div id="app">
+    <FormTable :formActions="formActions" />
   </div>
 </template>
 
 <script>
-// import InventoryReceiptList from '../htwInventoryReceiptList/components/InventoryReceiptList.vue';
-import mixin from '@/mixin';
+import FormTable from './components/formTable';
 
 export default {
-  mixins: [mixin],
   name: 'App',
   components: {
-    // InventoryReceiptList
+    FormTable
   },
   data: function () {
-    return {};
+    return {
+      formActions: {}
+    };
   },
   mounted: function () {},
   filters: {},
   methods: {}
 };
 </script>
+<style lang="scss" scoped>
+</style>

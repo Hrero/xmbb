@@ -1,0 +1,30 @@
+export const queryEtlTaskBaseInfoList = {
+  code: 200,
+  msg: "success",
+  data: [
+    {
+      bizType: 1,
+      desc: "这里是更新后的描述2",
+      gmtModify: 1673505707000,
+      id: 15,
+      key: "ET2023010914461",
+      name: "测试任务",
+      status: 1,
+      operatorId: 1123,
+      operatorName: "cy",
+      owner: "cyyangxu",
+    },
+    {
+      bizType: 1,
+      desc: "描述2333",
+      gmtModify: 1673505647000,
+      id: 31,
+      key: "ET2023011117291",
+      name: "测试任务25555",
+      operatorId: 1123,
+      status: 2,
+      operatorName: "cy",
+      owner: "cyyangxu",
+    },
+  ],
+};

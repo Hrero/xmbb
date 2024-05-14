@@ -10,6 +10,7 @@
     "publish": "lerna run tsc && npm run git && lerna publish"
   },
   "dependencies": {
+    "cosmiconfig": "^5.2.1",
     "lodash": "^4.17.21"
   }
 }

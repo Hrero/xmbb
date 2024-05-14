@@ -5,7 +5,12 @@ const formActions = {
   postActype: "listTransferPath", // 表格请求type
   postTableType: "dubbo", // 表格请求类型
   postTableField: "", // 表格返回值嵌套字段
-  pageAbleInner: true, // 表格分页配置
+  postTableWrapField: '',
+  pageAbleInner: 'prev, pager, next, jumper', // 表格分页配置        
+  formStyleLine: true,
+  defaultFormLine: {
+    materialCode: this.materialNo
+  },
   pageAble: true, // 表格分页开关
   postTableMock: false, // 表格mock数据
   lock: false, // 表格请求锁
